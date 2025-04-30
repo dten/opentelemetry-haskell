@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        stack-yaml: ['stack-8.10.yaml']
+        stack-yaml: ['stack-8.10.yaml', 'stack-9.8.yaml']
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
@@ -81,10 +81,14 @@ jobs:
         stack bench --stack-yaml ${{ matrix.stack-yaml }} opentelemetry-extra --benchmark-arguments '+RTS -l'
 
   macos-stack:
-    runs-on: macOS-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        stack-yaml: ['stack-8.10.yaml']
+        include:
+          - os: macOS-latest
+            stack-yaml: 'stack-9.8.yaml'
+          - os: macOS-13
+            stack-yaml: 'stack-8.10.yaml'
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
